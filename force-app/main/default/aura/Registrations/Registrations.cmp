@@ -1,0 +1,24 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    Welcome to Registrations<br/>
+    <aura:attribute Name="NameofStudent" type="String" default="" />
+    <aura:attribute Name="ParentName" type="String" default="" />
+    <aura:attribute Name="StandardOrClass" type="String" default="" />
+    <aura:attribute Name="NoOfHoursStudy" type="String[]" default="Less Than 1 Hour, Between 4 to 8 Hours, More than 8 Hours" />
+    <aura:attribute Name="MobileNumber" type="String" default="" />
+    <aura:attribute Name="HaveYouTakenCourseBefore" type="Boolean" default="false" />
+    <aura:attribute Name="Areyouinterestedinonlinecourse" type="Boolean" default="" /><br/>
+    
+    <lightning:input name="StudentName" label="Enter Your Name" value="{!v.NameofStudent}" /><br/>
+    <lightning:input name="Parent'sName" label="Enter Parent's Name" value="{!v.ParentName}" /><br/>
+    <lightning:input name="ClassName" label="Enter Your Class" value="{!v.StandardOrClass}" /><br/>
+    <lightning:select name="HoursStudied" label="Hours Studied?">
+        <aura:iteration items="{!v.NoOfHoursStudy}" var="hrs">
+            <option value="{!hrs}" text="{!hrs}" />
+        </aura:iteration>
+        
+    </lightning:select>
+    
+    
+    
+	
+</aura:component>

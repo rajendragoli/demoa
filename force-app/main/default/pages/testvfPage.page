@@ -1,0 +1,65 @@
+<apex:page controller="Pagination" showHeader="false">
+
+<style>
+    .metro {
+  display: inline-block !important;
+  padding: 5px !important;
+  margin: 5px !important;
+  background: #08C !important;
+  background-position: 0 0 !important;
+  /* Font styles */
+  color: white !important;
+  //font-weight: bold !important;
+  text-decoration: none !important;
+  text-align:center !important;
+}
+
+.metro:hover { background: #0AF; }
+
+.metro.three-d {
+  position: relative !important;
+  box-shadow: 
+    1px 1px #53A7EA,
+    2px 2px #53A7EA,
+    3px 3px #53A7EA !important;
+  transition: all 0.1s ease-in !important;
+}
+
+.metro.three-d:active { 
+  box-shadow: none !important;
+  top: 2px !important;
+  left: 2px !important;
+}
+</style>
+    <apex:form >
+
+   <apex:selectList value="{!InputText1}" multiselect="false" size="1">
+                    <apex:selectOption itemValue="Billing" itemLabel="Billing"/>
+                    <apex:selectOption itemValue="Metering" itemLabel="Metering"/>
+       </apex:selectList>
+                
+   
+   <apex:commandButton styleClass="metro" status="fetchStatus" reRender="pb" value="Search" action="{!refresh}" title="Refresh Page"/>
+            
+        <apex:pageBlock id="pb" mode="maindetail">
+            <apex:pageBlockTable value="{!Leads}" var="a" >
+                <apex:column headerValue="Name">
+                <apex:outputlink value="/{!a.id}">{!a.Name}</apex:outputlink>
+                </apex:column>
+                <apex:column value="{!a.LastActivityDate}"/>
+                <apex:column value="{!a.CreatedDate}"/>
+            </apex:pageBlockTable>
+            <apex:panelGrid columns="7">
+                <apex:commandButton styleClass="metro" status="fetchStatus" reRender="pb" value="|<" action="{!first}" disabled="{!!hasPrevious}" title="First Page"/>
+                <apex:commandButton styleClass="metro" status="fetchStatus" reRender="pb" value="<" action="{!previous}" disabled="{!!hasPrevious}" title="Previous Page"/>
+                <apex:commandButton styleClass="metro" status="fetchStatus" reRender="pb" value=">" action="{!next}" disabled="{!!hasNext}" title="Next Page"/>
+                <apex:commandButton styleClass="metro" status="fetchStatus" reRender="pb" value=">|" action="{!last}" disabled="{!!hasNext}" title="Last Page"/>
+                <apex:outputText >{!(pageNumber * size)+1-size}-{!IF((pageNumber * size)>noOfRecords, noOfRecords,(pageNumber * size))} of {!noOfRecords}</apex:outputText>
+                <apex:commandButton styleClass="metro" status="fetchStatus" reRender="pb" value="Refresh" action="{!refresh}" title="Refresh Page"/>
+                <apex:outputPanel style="color:#4AA02C;font-weight:bold;" >
+                    <apex:actionStatus id="fetchStatus" startText="Fetching..." stopText=""/>
+                </apex:outputPanel>
+            </apex:panelGrid>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

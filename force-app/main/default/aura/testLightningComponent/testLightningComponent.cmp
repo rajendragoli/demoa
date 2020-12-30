@@ -1,0 +1,19 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name ="accMessageHolder" type ="String"/>
+    <aura:attribute name ="conMessageHolder" type ="String"/>
+    <aura:attribute name ="accMessageHolder1" type ="String"/>
+    <aura:attribute name ="conMessageHolder1" type ="String"/>
+    <aura:attribute name ="backgroundFlag" type ="boolean" default="false"/>
+    
+    <lightning:card title="Hello">
+        <lightning:layout verticalAlign="center" class="x-large">
+            <lightning:layoutItem flexibility="auto" padding="around-small">
+                <c:MultiSelectLookup objectName="Account" fieldName="Name" label="Account Name" iconName="standard:app" placeholder="Enter Value"/><br></br>
+            <div class="slds-float_right">
+                <lightning:button class="slds-m-bottom_small" iconPosition="right" variant="brand" label="Fire Foreground Action " onclick="{!c.foregroundCall}" /> 
+                <lightning:button class="slds-m-bottom_small" iconPosition="right" variant="brand" label="Fire Background Action" onclick="{!c.backgroundCall}" />
+            </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

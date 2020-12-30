@@ -1,0 +1,299 @@
+<apex:page showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" controller="SearchController">
+    <apex:includeLightning />
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <head>
+            <apex:variable value="{!orgNameSpacePrefix}" var="NameSpacePrefix"/> 
+     
+            
+            <apex:includeScript value="/support/console/29.0/integration.js"/>
+            
+            <apex:includeScript value="/support/console/33.0/integration.js"/>
+        </head>
+        <body>
+            <!-- REQUIRED SLDS WRAPPER -->
+            <div class="slds full-height slds-text-body--small" ng-app="myApp" ng-controller="myCtrl" ng-init="showResultTable=true;showSearchedResult=false;showAlert='{!isError}';recordPerPage={!maxResult};showCard=false;showMap=false;errorMessage='{!errorMessage}';defaultOrderBy='{!defaultSortBy}';defaultASC='{!isDefaultASC}'">
+                <!-- Spinner -->
+                <c:SpinnerComponent />
+                <!-- spinner -->
+                
+                <!-- Tost Alert -->
+                <c:toastalertcomponent />
+                <!-- Tost Alert --> 
+                
+                <!-- Initianlize all Variables -->
+                <apex:variable value="{!$ObjectType.Lead.FieldSets.Lead_Sort_By}" var="sortBy"/>
+                <apex:variable value="{!$ObjectType.Lead.FieldSets.Search_Lead}" var="fieldNames"/>
+                <apex:variable value="{!$ObjectType.Lead.FieldSets.Lead_Columns}" var="coulmnFieldNames"/>
+                <apex:variable value="{!$ObjectType.Lead.FieldSets.Lead_Mandatory_Fields}" var="mandatoryFields"/>
+
+                <!-- Dinesh M: 06 Sep 2017: Set Default Value for checkbox-->
+                <apex:variable value="{!$ObjectType.Lead.FieldSets.Default_Active_Checkbox}" var="defaultActiveCheckbox"/>
+
+                <apex:variable value="Lead" var="objectName"/>
+                <apex:variable value="HC4__Age__c" var="ageFieldAPIName"/>
+                <apex:variable value="HC4__Gender__c" var="genderFieldAPIName"/>
+                <apex:variable value="HC4__Status__c" var="patientStatusFieldAPIName"/>
+                <apex:variable value="Patient" var="entityName"/>
+                <apex:variable value="{!recordPerPage}" var="recordPerPage"/>
+                <!-- Initianlize all Variables --> 
+                
+                <!-- main container -->
+                <div class="">
+                    
+                    <!--- Page Header start-->
+                    <div class="slds-page-header" role="banner">
+                        <div class="slds-media slds-media--center slds-p-bottom--x-small">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-user">
+                                    <svg aria-hidden="true" class="slds-icon slds-icon--medium">
+                                        <use xlink:href="{!URLFOR($Resource.SLDS, 'assets/css/lightningdesign/icons/standard-sprite/svg/symbols.svg#avatar')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text"></span>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <p class="slds-page-header__title slds-truncate slds-align-middle dark-gray-txt newPageTitle" title="{!IF($CurrentPage.parameters.action != null, currentDivision, '')}">{!IF($CurrentPage.parameters.action != null, currentDivision, '')}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--- Page Header End-->
+                    
+                    <!--- search field section start-->
+                    <div class="slds-p-around--medium slds-p-bottom--small">
+                        <fieldset class="slds-form--compound">
+                            <div class="slds-clearfix">
+                                <apex:form >
+                                    <!--- Dynamic Search Fields End-->
+                                    <c:dynamicsearchfields fieldNames="{!fieldNames}" objectName="{!objectName}" noOfPatientPrimaryFields="{!noOfPatientPrimaryFields}" leadVariable="{!Patient}"></c:dynamicsearchfields>
+                                    <!--- Dynamic Search Fields End-->
+                                </apex:form>
+                            </div>
+                            <c:searchclearbutton NameSpace="{!orgNameSpacePrefix}" ></c:searchclearbutton>
+                        </fieldset>
+                    </div>
+                    <!--- search filed section end-->
+                    
+                    <!--- no search result start-->
+                    <div class="noResultFound set-relative-position" ng-show="isNoRecords" >
+                        <div class="set-absolute-position center-ele  slds-text-align--center" ng-init="isReload=true" >
+                            <div class="gray-color slds-text-heading--small bold-txt"></div>
+                            <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.eventId == null && $CurrentPage.parameters.action== null}">
+                                
+                                <apex:outputPanel rendered="{!$CurrentPage.Name == LOWER(NameSpacePrefix) + 'SearchPatient' && $CurrentPage.parameters.action == null  }" layout="none">
+                                   
+                                </apex:outputPanel>
+                                
+                                <apex:outputPanel rendered="{!NOT($CurrentPage.Name == LOWER(NameSpacePrefix) + 'SearchPatient' && $CurrentPage.parameters.action == null  )}" layout="none">
+                                    
+                                </apex:outputPanel>
+                                
+                                / <!-- Dinesh M: 20 Sep 2017 - ENGC-804 - Initialize the url
+                                <button class="slds-button slds-text-body--regular" ng-init="iframeLink='/apex/CreateNew{!entityName}?action=openNewTab'" ng-click="isReload=!isReload;showPopup = 'slds-fade-in-open'; backdrop='slds-backdrop--open';iframeHeader='Add New {!entityName}/Prospect';iframeLink='/apex/CreateNew{!entityName}?action=openNewTab&isReload='+isReload">Add New {!entityName}</button>
+                                -->
+                                
+                                <!-- added ng-init parameters from button written above -->
+                                <apex:outputPanel rendered="{!$CurrentPage.Name == LOWER(NameSpacePrefix) + 'SearchPatient' && $CurrentPage.parameters.action == null  }">
+                                    <button class="slds-button slds-text-body--regular" ng-show="isSegmentSwitchActive" ng-init="iframeLink='/apex/CreateNew{!entityName}?action=openNewTab'" ng-click="isReload=!isReload; displayLtngComp('AddNewPatientLinkOnNoSearch'  ); iframeHeader='Add New {!entityName}/Prospect';iframeLink='/apex/CreateNew{!entityName}?action=openNewTab&isReload='+isReload">Add New {!entityName}</button>
+                                    <button class="slds-button slds-text-body--regular" ng-show="!isSegmentSwitchActive" ng-init="iframeLink='/apex/CreateNew{!entityName}?action=openNewTab'" ng-click="isReload=!isReload;showPopup = 'slds-fade-in-open'; backdrop='slds-backdrop--open';iframeHeader='Add New {!entityName}/Prospect';iframeLink='/apex/CreateNew{!entityName}?action=openNewTab&isReload='+isReload">Add New {!entityName}</button>
+                                </apex:outputPanel>
+                                
+                                <!-- added ng-init parameters from button written above -->
+                                <apex:outputPanel rendered="{!NOT($CurrentPage.Name == LOWER(NameSpacePrefix) + 'SearchPatient' && $CurrentPage.parameters.action == null  )}">
+                                    <button class="slds-button slds-text-body--regular" ng-init="iframeLink='/apex/CreateNew{!entityName}?action=openNewTab'" ng-click="isReload=!isReload;showPopup = 'slds-fade-in-open'; backdrop='slds-backdrop--open';iframeHeader='Add New {!entityName}/Prospect';iframeLink='/apex/CreateNew{!entityName}?action=openNewTab&isReload='+isReload">Add New {!entityName}</button>
+                                </apex:outputPanel>
+                                
+                                
+                                
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.eventId != null}">
+                                <button class="slds-button slds-text-body--regular" onclick="location.href='/apex/CreateNew{!JSENCODE(entityName)}?action=addNewEvent&eventId={!JSENCODE($CurrentPage.parameters.eventId)}'">Add New {!entityName}</button>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.action== 'referral'}">
+                                <button class="slds-button slds-text-body--regular" onclick="location.href='/apex/CreateNew{!JSENCODE(entityName)}?action=referral&eventId={!JSENCODE($CurrentPage.parameters.eventId)}&action=referral'">Add New {!entityName}</button>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                    <!---no search result end-->
+                    
+                    <!--- no search result start-->
+                    <div class="noResultFound set-relative-position" ng-hide="showSearchedResult || isNoRecords" >
+                        <div class="set-absolute-position center-ele  slds-text-align--center" ng-init="isReload=true" >
+                            <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.eventId == null && $CurrentPage.parameters.action== null}">
+                                
+                                <apex:outputPanel rendered="{!$CurrentPage.Name == LOWER(NameSpacePrefix) + 'SearchPatient' && $CurrentPage.parameters.action == null  }" layout="none">
+                                    
+                                </apex:outputPanel>
+                                
+                                <apex:outputPanel rendered="{!NOT($CurrentPage.Name == LOWER(NameSpacePrefix) + 'SearchPatient' && $CurrentPage.parameters.action == null  )}" layout="none">
+                                </apex:outputPanel>
+                                
+                            </apex:outputPanel>
+                            
+                        </div>
+                    </div>
+                    <!---no search result end-->
+                    
+                    <!-- popup window -->
+                    <c:iframe_popup iframeHeader="{{iframeHeader}}" iframeLink="{{iframeLink}}" height="630px" ></c:iframe_popup>
+                    <!-- popup window -->
+                    
+                    <!--- List search result section start-->
+                    <div class="searchResult slds-p-around--large" ng-show="showSearchedResult" ng-init="patientCardName ='New'; patientCardName = 'Patient'; providerCardName = 'Provider';eventCardName ='Event'">
+                        <!--- list table search part-->
+                        <div class="slds-card">
+                            <c:rightbuttonsonsearch NameSpace="{!orgNameSpacePrefix}" fieldNames="{!sortBy}" objectName="{!objectName}" objectLabel="{!entityName}"></c:rightbuttonsonsearch>
+                            <div class="listSearch slds-scrollable--x" ng-show="showResultTable">
+                                <table id="" class="slds-table slds-table--bordered slds-m-around--small slds-text-body--small paginated">
+                                    <thead>
+                                        <tr class="slds-text-heading--label">
+                                            <th class="slds-is-sortable bold-txt" scope="col">
+                                                <div class=""></div>
+                                            </th>
+                                            <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.eventId != null || $CurrentPage.parameters.action == 'referral'}">
+                                                <th scope="col">
+                                                    <div class="slds-truncate">
+                                                    </div>
+                                                </th>
+                                            </apex:outputPanel>
+                                            <!--- Dynamic Search Result Header Column  -->                                                
+                                            <c:dynamicsearchtableheader NameSpace="{!orgNameSpacePrefix}" columnFieldNames="{!coulmnFieldNames}" objectName="{!objectName}" ></c:dynamicsearchtableheader>
+                                            <!--- Dynamic Search Result Header Column  -->                                                
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="slds-hint-parent slds-section__title-action dark-gray-txt page" ng-repeat="currentResult in searchResults " ng-mouseover="hoverToolTip = true;setpostion($event);" ng-mouseleave="hoverToolTip = false" ng-click="{!IF($CurrentPage.parameters.action!= null , '', 'openPrimaryTab(currentResult.Id, currentResult.Name)')}">
+                                            <td class="" data-label="" >
+                                                <!--- Icons  --> 
+                                               <!--<span ng-if="$last"  ng-init="$last?updateReordSizeSearch($index):null;">
+                                                   | filter: { FirstName: '!Anonymous'} | filter: { LastName: '!Anonymous'} 
+                                               </span> -->
+                                               
+                                                <span ng-if="patientCardName == '{!entityName}' && currentResult.{!patientStatusFieldAPIName} !=  && currentResult.{!patientStatusFieldAPIName} != null" class="slds-icon_container" title="Patient">
+                                                    <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                        <use xlink:href="{!URLFOR($Resource.SLDS, 'assets/css/lightningdesign/icons/utility-sprite/svg/symbols.svg#user')}" class="patient-icon-color"></use>
+                                                    </svg>
+                                                </span>
+                                                <span ng-if="patientCardName == '{!entityName}' && (currentResult.{!patientStatusFieldAPIName} ==  || currentResult.{!patientStatusFieldAPIName} == null)" class="slds-avatar slds-avatar--xx-small" title="consumer">
+                                                    <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                        <use xlink:href="{!URLFOR($Resource.SLDS, 'assets/css/lightningdesign/icons/utility-sprite/svg/symbols.svg#user')}" class="consumer-icon-color"></use>
+                                                    </svg>
+                                                </span>
+                                                <span ng-if="providerCardName == '{!entityName}' && currentResult.{!patientStatusFieldAPIName}" class="slds-avatar slds-avatar--xx-small" title="Provider In Network">
+                                                    <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                        <use xlink:href="{!URLFOR($Resource.SLDS, 'assets/css/lightningdesign/icons/utility-sprite/svg/symbols.svg#user')}" class="in-network-icon-color"></use>
+                                                    </svg>
+                                                </span>
+                                                <span ng-if="providerCardName == '{!entityName}' && !currentResult.{!patientStatusFieldAPIName}" class="slds-avatar slds-avatar--xx-small" title="Provider Out-Of Network">
+                                                    <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                        <use xlink:href="{!URLFOR($Resource.SLDS, 'assets/css/lightningdesign/icons/utility-sprite/svg/symbols.svg#user')}" class="out-network-icon-color"></use>
+                                                    </svg>
+                                                </span>
+                                                <!-- <span ng-if="eventCardName == '{!entityName}'" class="slds-avatar slds-avatar--xx-small" title="consumer"><img src="{!URLFOR($Resource.Evariant_Resource, 'assets/img/provider-Out-Of-Network.png')}" alt="" /></span>  -->
+                                                <!--- Icons -->  
+                                            </td>
+                                            <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.eventId != null}">
+                                                <td class="slds-truncate" scope="row" data-label="" ng-init="action.currentResult.Id = false">
+                                                    <a href="#void" ng-click="putOnHoldFromPopup('{!$CurrentPage.parameters.eventId}',currentResult.Id, currentResult.Name, currentResult.Email, currentResult.Phone);action.currentResult.Id=true;" ng-hide="currentResult.HC4__EventRegistrants__r.length > 0 || action.currentResult.Id">
+                                                    <span style="cursor:pointer;">
+                                                      
+                                                    </span>                                            
+                                                    </a>
+                                                    <span class="gray-color bold-txt dark-green-color" ng-show="action.currentResult.Id">  </span>
+                                                    <span ng-show="currentResult.HC4__EventRegistrants__r.length > 0">
+                                                      
+                                                    </span>
+                                                    
+                                                </td>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel layout="none" rendered="{! $CurrentPage.parameters.action == 'referral'}">
+                                                <td class="slds-truncate" scope="row" data-label="" ng-init="action.currentResult.Id = false">
+                                                    <a href="#void" ng-click="selectPatient(currentResult.Id, currentResult.Name);" >
+                                                        <span style="cursor:pointer;">
+                                                        Select
+                                                        </span>                                            
+                                                    </a>
+                                                </td>
+                                            </apex:outputPanel>
+                                            <!--- Dynamic Search Result Column  --> 
+                                            <c:dynamicsearchedresulttable coulmnFieldNames="{!coulmnFieldNames}" objectName="{!objectName}"></c:dynamicsearchedresulttable>
+                                            <!--- Dynamic Search Result Column  -->     
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="NewPaginationContainer" class="slds-card__footer">
+                                <div class="slds-text-align--right slds-m-top--x-small">                                 
+                                </div>
+                            </div>
+                        </div>
+                        <!--- list search part end-->
+                        
+                        <!--- gride search part end-->
+                        <div class="slds-m-top--small grideSearch slds-col--padded slds-m-bottom--small" ng-show="showResultGrid" ng-repeat="currentResult in searchResults">
+                            <!-- gride row start-->
+                            <!-- gride row end-->
+                        </div>
+                        <!--- gride search part end-->
+                    </div>
+                    <!--- List search result section end-->
+                </div>
+                <!-- slds-grid main end -->
+                
+                <!-- Segment Switch Lightning component -->
+                <div id="lightning" />
+            </div>
+            <!-- / REQUIRED SLDS WRAPPER -->
+            
+            
+        </body>
+        <script>
+            var NameSpacePrefix = '{!JSENCODE(NameSpacePrefix)}';
+
+            var objectName = '{!JSENCODE(objectName)}';
+            var registrantId = '{!JSENCODE($CurrentPage.parameters.eventId)}'; 
+ 
+            var action = '{!JSENCODE($CurrentPage.parameters.action)}'; 
+            var currentPageUrl = '{!JSENCODE($CurrentPage.URL)}';
+            var primaryRecId = '{!JSENCODE($CurrentPage.parameters.primaryRecId)}';
+            var caseid='{!JSENCODE($CurrentPage.parameters.caseid)}';
+            var autoSearchCharLimit = {!autoSearchCharLimit};
+            
+            
+            var isPatientSearch = {!$CurrentPage.Name == LOWER(NameSpacePrefix) + 'SearchPatient'};
+            var isSegmentSwitchActive = {!isSegmentSwitchActive};
+            
+            var searchableFields = [];
+            var noOfRecordPerpage = {!recordPerPage};
+            
+            <apex:repeat value="{!fieldNames}" var="currentFieldName">
+                searchableFields.push('{!JSENCODE(currentFieldName)}');
+            </apex:repeat> 
+            
+            var searchResultColumn = [];
+            
+            <apex:repeat value="{!coulmnFieldNames}" var="currentCoulmnName">
+                searchResultColumn.push('{!JSENCODE(currentCoulmnName)}');
+            </apex:repeat> 
+            
+            <apex:repeat value="{!mandatoryFields}" var="currentCoulmnName">
+                searchResultColumn.push('{!JSENCODE(currentCoulmnName)}');
+            </apex:repeat> 
+
+            // Dinesh M: 06 Sep 2017: Set Default Value for checkbox
+            var activeCheckBoxArray = [];
+
+            <apex:repeat value="{!defaultActiveCheckbox}" var="currentCheckbox">
+                activeCheckBoxArray.push('{!JSENCODE(currentCheckbox)}');
+            </apex:repeat>
+            
+            sforce.console.setTabTitle('Search Patient');
+            
+            
+            var primaryTabName = 'Search Patient';
+        </script>
+        <apex:includeScript value="/lightning/lightning.out.js" />
+        
+        <c:googleanalytics />
+    </html>
+</apex:page>

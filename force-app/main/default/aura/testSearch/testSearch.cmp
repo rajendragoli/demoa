@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="firstName" type="String"/>
+    <aura:attribute name="lastName" type="String"/>
+     <lightning:card title="Hello" class="slds-p-horizontal_small">
+    <div class="row">
+        <lightning:input name="firstname" value="{! v.firstName }" placeholder="type first name..." label="First Name" />        
+        <lightning:input name="lastname" value="{! v.lastName }" placeholder="type last name..." label="Last Name" />
+         <br></br>
+    <lightning:button label="Save" title="save" onclick="{! c.handleClick }"/>
+
+    </div>
+    </lightning:card>
+</aura:component>

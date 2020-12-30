@@ -1,0 +1,3 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+    <iframe width="800" height="600" style="border: 1px solid" src="http://bi.enverahealth.com%3A8081/app/main%23/dashboards/5aa1a468fb5edf3fe5b983fa%3Fembed%3Dtrue" />
+</aura:component>

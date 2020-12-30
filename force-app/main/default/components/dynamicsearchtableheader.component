@@ -1,0 +1,9 @@
+<apex:component >
+    <apex:attribute name="objectname" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="columnfieldnames" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="namespace" type="String" description="TODO: Describe me"/>
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Component: dynamicsearchtableheader
+  <!-- End Default Content REMOVE THIS -->
+</apex:component>

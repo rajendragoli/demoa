@@ -1,0 +1,15 @@
+<aura:component controller="ptPicklistRet" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="ptTypes" type="Patients__c[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <lightning:recordEditForm aura:id="recordEditForm" objectApiName="Patients__c">
+        <lightning:inputField fieldName="Name" />
+        <lightning:inputField fieldName="Lead__c" />
+        <lightning:select name="businessType" aura:id="businessTypeList" label="Pt Picklist" onchange="{!c.newValueSelected}" >
+            <option value="">Select One</option>
+            <aura:iteration items="{!v.ptTypes}" var="businessType">
+                <option value="{!businessType.Id}" text="{!businessType.Pt_Picklist__c}" />
+            </aura:iteration>
+        </lightning:select>
+        <lightning:button class="slds-m-bottom_small" type="submit" label="Submit" />
+    </lightning:recordEditForm>
+</aura:component>

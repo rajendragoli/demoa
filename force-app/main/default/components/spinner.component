@@ -1,0 +1,9 @@
+<apex:component >
+    <apex:attribute name="show" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="color" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="height" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="width" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="type" type="String" description="TODO: Describe me"/>
+  <!-- Begin Default Content REMOVE THIS -->
+  <!-- End Default Content REMOVE THIS -->
+</apex:component>

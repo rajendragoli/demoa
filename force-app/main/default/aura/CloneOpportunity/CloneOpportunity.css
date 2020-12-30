@@ -1,0 +1,21 @@
+/*
+ * style the footer like the lightning-primitive-datatable-status-bar
+ * which gets displayed when a cell changes
+ **/
+.THIS.lineCloneDiv.datatableStatusBar{
+    padding: 8px 0;
+}
+
+/*
+ * Footer spaces buttons differently to normal, set back to default
+ **/
+.THIS.lineCloneDiv.slds-modal__footer .slds-button + .slds-button {
+    margin-left: 0.25rem
+}
+
+/**
+ * Without this the Action dropdown will cut off if the table is very short
+ */
+.THIS.lineCloneDiv div.slds-scrollable_y {
+	 min-height: 200px;
+}

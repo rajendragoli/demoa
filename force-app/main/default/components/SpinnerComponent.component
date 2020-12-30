@@ -1,0 +1,5 @@
+<apex:component >
+  <!-- Begin Default Content REMOVE THIS -->
+<c:spinner type="bars" width="10" height="10" color="Orange" show="true"/>
+  <!-- End Default Content REMOVE THIS -->
+</apex:component>

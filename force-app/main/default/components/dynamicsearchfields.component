@@ -1,0 +1,10 @@
+<apex:component >
+    <apex:attribute name="leadvariable" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="noofpatientprimaryfields" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="objectname" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="fieldnames" type="String" description="TODO: Describe me"/>
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Component: dynamicsearchfields
+  <!-- End Default Content REMOVE THIS -->
+</apex:component>

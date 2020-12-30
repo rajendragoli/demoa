@@ -1,0 +1,74 @@
+<aura:component controller="CloneOpportunityController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+    <ltng:require styles="{!$Resource.slds_modal_large}"/>
+
+    <aura:attribute name="lstLineItems" type="Object"/>
+    <aura:attribute name="fieldsetColumns" type="List"/>
+    <aura:attribute name="errors" type="Object" default="[]"/>
+    <aura:attribute name="draftValues" type="Object" default="[]"/>
+    <aura:attribute name="changesMade" type="Boolean" default="false" />
+    <aura:attribute name="loading" type="Boolean" default="false" />
+    <aura:attribute name="oppCreated" type="Boolean" default="false" />
+    <aura:attribute name="clonedOppId" type="String" />
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+
+    <aura:if isTrue="{!v.loading}">
+        <lightning:spinner alternativeText="Loading..." size="medium" variant="brand"/>
+    </aura:if>
+
+    <lightning:messages />
+
+    <aura:if isTrue="{!!v.oppCreated}">
+        <lightning:card class="slds-p-around--medium" title="Clone Opportunity">
+            <div class="slds-p-left_large slds-p-right_medium">
+                <lightning:recordForm aura:id="recordEditForm"
+                                      objectApiName="Opportunity"
+                                      columns="2"
+                                      layoutType="Full"
+                                      mode="edit"
+                                      onsubmit="{!c.createOpportunity}"
+                                      oncancel="{!c.cancelClone}"
+                                      recordId="{!v.recordId}"
+                />
+
+            </div>
+        </lightning:card>
+    </aura:if>
+
+    <aura:if isTrue="{!v.oppCreated}">
+        <div class="lineCloneDiv">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">
+                    <strong><ui:outputText value="Edit Products" /></strong>
+                </h2>
+            </header>
+
+            <div style="max-height:350px;overflow-y: auto !important;">
+                <div class="slds-table_edit_container slds-is-relative">
+                    <lightning:datatable
+                            columns="{!v.fieldsetColumns}"
+                            data="{!v.lstLineItems}"
+                            keyField="Id"
+                            errors="{!v.errors}"
+                            draftValues="{!v.draftValues}"
+                            hideCheckboxColumn="true"
+                            onrowaction="{!c.handleRowAction}"
+                            oncellchange="{!c.hideManualSaveBtn}"
+                            onsave="{!c.cloneLines}"
+                            oncancel="{!c.navigateToRecord}"
+
+                    />
+                </div>
+            </div>
+
+            <aura:if isTrue="{!!v.changesMade}">
+                <footer class="slds-modal__footer datatableStatusBar">
+                    <div class="slds-grid slds-grid_align-center">
+                        <lightning:button label="Cancel" onclick="{!c.navigateToRecord}" />
+                        <lightning:button label="Save" variant="brand" onclick="{!c.cloneLines}" aura:id="manualSaveBtn"/>
+                    </div>
+                </footer>
+            </aura:if>
+        </div>
+    </aura:if>
+</aura:component>
