@@ -7,7 +7,7 @@ public class AccountFactory {
         new String[]{'Research', 'Panama', 'Golden', 'Triangle', 'Primary', 'Mohawk', 'Ideal', 'Productivity', 'RF Tech', 'Rockridge'},
         new String[]{'Industries', 'Limited', 'Incorporated', 'Solutions', 'Services', 'Partners, Inc.', 'Inc.', 'Ind.', 'Ltd.', 'Services, Inc.'}
     };
-
+//Simply adding a comment
     private static final List<String> BILLING_STATE = new String[]{'CA', 'NV', 'UT', 'AZ', 'CO', 'NM', 'TX'};
 
     private List<String> accountNames;
